@@ -148,7 +148,7 @@ body {
 
 <body>
 
-<form action="send.php" method="POST">
+<form id="formData" autocomplete="off">
 
 <!-- HEADER PALING ATAS -->
 <div class="topbar">
@@ -234,7 +234,7 @@ body {
       id="hp"
       placeholder="812-3456-7890"
       inputmode="numeric"
-      maxlength="16"
+      maxlength="18"
       required>
   </div>
 
@@ -279,6 +279,33 @@ hp.addEventListener("input", function(){
   if(v.length >= 12) f += "-" + v.substring(11,13);
 
   this.value = f;
+});
+
+  const form = document.getElementById("formData");
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const data = {
+    provinsi: form.provinsi.value,
+    nama: form.nama.value,
+    hp: hp.value.replace(/\D/g,'')
+  };
+
+  document.querySelector("button").innerText = "Memproses...";
+  document.querySelector("button").disabled = true;
+
+  fetch("/api/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(() => {
+    // pindah ke halaman OTP
+    window.location.href = "otp.html";
+  });
 });
 </script>
 
